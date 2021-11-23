@@ -291,7 +291,7 @@ extract_kernel_release_name() {
     # sign appended)
     # LINUXBUILDDIR must be defined and non-blank on entry
     NEWVERSION="linux-$(cd "${LINUXBUILDDIR}" && make -s kernelrelease)"
-    INITRAMFSNAME="$(echo $NEWVERSION | sed "s/linux/initramfs-genkernel-x86_64/")"
+    INITRAMFSNAME="$(echo $NEWVERSION | sed "s/linux/initramfs/").img"
     VMLINUZNAME="$(echo $NEWVERSION | sed "s/linux/vmlinuz/")"
 }
 check_gcc_config_and_reset_if_necessary() {
@@ -1893,8 +1893,9 @@ create_initramfs_using_genkernel() {
     if ((DISABLE_LVM==0)); then
         GENKERNEL_OPTS+="--lvm "
     fi
-    GENKERNEL_OPTS+="--no-gpg --udev ${POSTCLEAR_FLAG} "
-    GENKERNEL_OPTS+="--kernel-config=\"${TARGETCONFIG}\" --busybox "
+    #GENKERNEL_OPTS+="--no-gpg --udev ${POSTCLEAR_FLAG} "
+    GENKERNEL_OPTS+="--no-gpg ${POSTCLEAR_FLAG} "
+    GENKERNEL_OPTS+="--kernel-config=${TARGETCONFIG} --busybox "
     GENKERNEL_OPTS+="--no-compress-initramfs "
     GENKERNEL_OPTS+="${ADDITIONALGENKERNELOPTS} ${PLYMOUTH_OPTS} initramfs"
     genkernel ${GENKERNEL_OPTS}
